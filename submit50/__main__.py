@@ -137,13 +137,18 @@ def main():
     excepthook.verbose = args.verbose
     if args.verbose:
         logging.basicConfig(level="INFO")
+
         # Disable progress bar so it doesn't interfere with log
         lib50.ProgressBar.DISABLED = True
 
     check_announcements()
     check_version()
 
-    lib50.push("submit50", args.slug, prompt=prompt)
+    # Create config Loader
+    config_loader = lib50.config.Loader("submit50")
+    config_loader.scope("files", "include", "exclude", "require")
+
+    lib50.push("submit50", args.slug, config_loader, prompt=prompt)
 
 
 if __name__ == "__main__":
